@@ -4,77 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuarios</title>
+    <script src="../crearTabla.js"></script>
 </head>
 <body>
-    <table>
-        <thead>
-            <tr>
-                <td>Nombre</td>
-                <td>Email</td>
-                <td>Password</td>
-                <td>Status</td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Pepito</td>
-                <td>Superpassword</td>
-                <td>pepito@gmail.com</td>
-                <td>activo</td>
-            </tr>
-            <tr>
-                <td>Pepito</td>
-                <td>Superpassword</td>
-                <td>pepito@gmail.com</td>
-                <td>activo</td>
-            </tr>
-        </tbody>
-    </table>
     <script>
         fetch("/users")
         .then(data => data.json())
         .then(usuarios => {
             console.log(usuarios)
-            
-
         })
 
+        // Función para crear la tabla con las canciones
+        function crearTabla(canciones) {
+            let table = "<table border='1'><tr><th>Título</th><th>Artista</th><th>Año</th></tr>";
+            canciones.forEach(cancion => {
+                table += `<tr>
+                            <td>${cancion.title}</td>
+                            <td>${cancion.artist}</td>
+                            <td>${cancion.year}</td>
+                          </tr>`;
+            });
+            table += "</table>";
+            document.getElementById("songTable").innerHTML = table;
+        }
 
+        // Función para obtener las canciones del servidor
+        function obtenerCanciones() {
+            fetch('/canciones')  // Llamada al endpoint /canciones
+                .then(response => response.json())  // Convertir la respuesta a JSON
+                .then(data => {
+                    crearTabla(data);  // Crear la tabla con los datos de las canciones
+                })
+                .catch(error => console.error('Error al obtener las canciones:', error));
+        }
 
+        // Llamar a la función para obtener las canciones cuando la página cargue
+        window.onload = function() {
+            obtenerCanciones();
+        }
 
-
-
-
-        // fetch("/users")
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         console.log(data);
-        //         const keys = Object.keys(data[0]);
-        //         const table = document.createElement("table");
-        //         const thead = document.createElement("thead");
-        //         const tbody = document.createElement("tbody");
-        //         const tr = document.createElement("tr");
-        //         keys.forEach(key => {
-        //             const th = document.createElement("th");
-        //             th.textContent = key;
-        //             tr.appendChild(th);
-        //         });
-        //         thead.appendChild(tr);
-        //         table.appendChild(thead);
-
-        //         data.forEach(user => {
-        //             const tr = document.createElement("tr");
-        //             keys.forEach(key => {
-        //                 const td = document.createElement("td");
-        //                 td.textContent = user[key];
-        //                 tr.appendChild(td);
-        //             });
-        //             tbody.appendChild(tr);
-        //         });
-
-        //         table.appendChild(tbody);
-        //         document.body.appendChild(table);
-        //     });
     </script>
 </body>
 </html>
